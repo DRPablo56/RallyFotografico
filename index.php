@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("utiles/funciones.php");
 require_once("utiles/variables.php");
 $conexion = conexionBD($host, $user, $password, $bbdd);
