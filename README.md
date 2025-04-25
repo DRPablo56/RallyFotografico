@@ -1,1 +1,1 @@
-Proyecto desplegado en rallyfotografico.rf.gd
+Proyecto desplegado en http://rallyfotografico.rf.gd
