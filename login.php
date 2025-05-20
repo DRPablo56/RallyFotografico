@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="container text-center p-4">
         <form class="col-4 offset-md-4" method="post">
             <input type="text" name="email" placeholder="E-mail">
-            <input type="" name="contrasena" placeholder="Contraseña">
+            <input type="password" name="contrasena" placeholder="Contraseña">
             <input type="submit" class="btn btn-warning my-2" name="inicio" value="Iniciar Sesión">
             <?php
                  if (count($errores) > 0) echo "<div class='d-block display invalid-feedback'>$errores[0]</div>"

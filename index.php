@@ -20,12 +20,25 @@ $conexion = conexionBD($host, $user, $password, $bbdd);
         <div class="container-fluid">
             <a class="navbar-brand">Rally Fotográfico</a>
             <div class="d-flex">
+                <?php
+                if (isset($_SESSION["nombre"])):
+                ?>
+                <span class="text-light me-2">Bienvenido <?php echo $_SESSION["nombre"] ?></span>
+                <a href="cerrar.php">
+                    <button class="btn btn-danger me-2" type="button">Cerrar Sesión</button>
+                </a>
+                <?php
+                else:
+                ?>
                 <a href="login.php">
                     <button class="btn btn-warning me-2" type="button">Iniciar Sesión</button>
                 </a>
                 <a href="registro.php">
                     <button class="btn btn-warning" type="button">Crear cuenta</button>
                 </a>
+                <?php
+                endif;
+                ?>
             </div>
         </div>
     </nav>
