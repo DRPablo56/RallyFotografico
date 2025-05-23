@@ -11,7 +11,7 @@ if ($_GET["r"] == "") {
     $consulta = "select estado from rallys where id = $id";
     $resultado = resultadoConsulta($conexion, $consulta);
     $fila = $resultado->fetch(PDO::FETCH_OBJ);
-    if ($fila->estado != "activo") {
+    if ($fila->estado != "Activo") {
         header("Location: index.php");
     }
 }

@@ -3,10 +3,10 @@ session_start();
 require_once("utiles/funciones.php");
 require_once("utiles/variables.php");
 $conexion = conexionBD($host, $user, $password, $bbdd);
-// Notas: si la conexión falla, mostrar página de error. Si no hay rallys activos, mostrar sección que lo explique.
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,8 @@ $conexion = conexionBD($host, $user, $password, $bbdd);
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+
+<body class="d-flex flex-column min-vh-100">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
@@ -23,19 +24,19 @@ $conexion = conexionBD($host, $user, $password, $bbdd);
                 <?php
                 if (isset($_SESSION["nombre"])):
                 ?>
-                <span class="text-light me-2">Bienvenido <?php echo $_SESSION["nombre"] ?></span>
-                <a href="cerrar.php">
-                    <button class="btn btn-danger me-2" type="button">Cerrar Sesión</button>
-                </a>
+                    <span class="text-light me-2">Bienvenido <?php echo $_SESSION["nombre"] ?></span>
+                    <a href="cerrar.php">
+                        <button class="btn btn-danger me-2" type="button">Cerrar Sesión</button>
+                    </a>
                 <?php
                 else:
                 ?>
-                <a href="login.php">
-                    <button class="btn btn-warning me-2" type="button">Iniciar Sesión</button>
-                </a>
-                <a href="registro.php">
-                    <button class="btn btn-warning" type="button">Crear cuenta</button>
-                </a>
+                    <a href="login.php">
+                        <button class="btn btn-warning me-2" type="button">Iniciar Sesión</button>
+                    </a>
+                    <a href="registro.php">
+                        <button class="btn btn-warning" type="button">Crear cuenta</button>
+                    </a>
                 <?php
                 endif;
                 ?>
@@ -79,37 +80,51 @@ $conexion = conexionBD($host, $user, $password, $bbdd);
             </div>
         </div>
     </div>
+    <?php
+    $consulta = "select COUNT(*) as num from rallys where estado = 'Activo'";
+    $resultado = resultadoConsulta($conexion, $consulta);
+    $fila = $resultado->fetch(PDO::FETCH_OBJ);
+    if ($fila->num != 0):
+    ?>
+        <!-- Seción Rallys -->
 
-    <!-- Seción Rallys -->
+        <div class="bg-light py-5">
+            <div class="container">
+                <h2 class="text-center mb-4">¡Entra a un Rally!</h2>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <?php
+                        $consulta = "select * from rallys where estado = 'Activo'";
+                        $resultado = resultadoConsulta($conexion, $consulta);
+                        while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+                            echo '<div class="card">';
+                            echo '<div class="card-body">';
+                            echo '<h5 class="card-title">' . $fila->titulo . '</h5>';
+                            echo '<p class="card-text">' . $fila->descripcion . '</p>';
+                            echo '<a href="rally.php?r=' . $fila->id . '" class="btn btn-primary">Entrar</a>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
+                        ?>
 
-    <div class="bg-light py-5">
-        <div class="container">
-            <h2 class="text-center mb-4">¡Entra a un Rally!</h2>
-            <div class="row g-4">
-                <div class="col-md-6">
-                <?php
-     $consulta = "select * from rallys";
-     $resultado = resultadoConsulta($conexion, $consulta);
-     while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
-        if ($fila->estado == "activo") {
-            echo '<div class="card">';
-            echo '<div class="card-body">';
-            echo '<h5 class="card-title">' . $fila->titulo . '</h5>';
-            echo '<p class="card-text">' . $fila->descripcion . '</p>';
-            echo '<a href="rally.php?r=' . $fila->id . '" class="btn btn-primary">Entrar</a>';
-            echo '</div>';
-            echo '</div>';
-        }
-     }
-     ?>
-                    
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
+    <?php
+    else:
+    ?>
+        <div class="bg-light py-5">
+            <div class="container">
+                <h2 class="text-center mb-4">No hay rallys activos</h2>
+                <p class="text-center">Actualmente no hay rallys activos. ¡Vuelve pronto!</p>
+            </div>
+        </div>
+    <?php
+    endif;
+    ?>
     <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-1">
+    <footer class="bg-dark text-white py-4 mt-auto">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
@@ -119,7 +134,7 @@ $conexion = conexionBD($host, $user, $password, $bbdd);
             </div>
         </div>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
