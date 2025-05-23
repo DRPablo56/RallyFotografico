@@ -18,7 +18,7 @@ $conexion = conexionBD($host, $user, $password, $bbdd);
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand">Rally Fotográfico</a>
+            <a class="navbar-brand" href="index.php">Rally Fotográfico</a>
             <div class="d-flex">
                 <?php
                 if (isset($_SESSION["nombre"])):
@@ -96,7 +96,7 @@ $conexion = conexionBD($host, $user, $password, $bbdd);
             echo '<div class="card-body">';
             echo '<h5 class="card-title">' . $fila->titulo . '</h5>';
             echo '<p class="card-text">' . $fila->descripcion . '</p>';
-            echo '<a href="#" class="btn btn-primary">Entrar</a>';
+            echo '<a href="rally.php?r=' . $fila->id . '" class="btn btn-primary">Entrar</a>';
             echo '</div>';
             echo '</div>';
         }
