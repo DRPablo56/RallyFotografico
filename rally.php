@@ -8,6 +8,7 @@ if ($_GET["r"] == "") {
     header("Location: index.php");
 } else {
     $id = $_REQUEST["r"];
+    $_SESSION["r"] = $id;
     $consulta = "select estado from rallys where id = $id";
     $resultado = resultadoConsulta($conexion, $consulta);
     $fila = $resultado->fetch(PDO::FETCH_OBJ);
@@ -108,7 +109,7 @@ if ($_GET["r"] == "") {
                         echo '<h5 class="card-title">' . $fila->titulo . '</h5>';
                         echo '<p class="card-text">' . $fila->descripcion . '</p>';
                         echo '<img src="img/' . $fila->url . '" class="card-img-top py-2" alt="Imagen de ' . $fila->titulo . '">';
-                        echo '<a href="#" class="btn btn-primary mt-auto">Votar</a>';
+                        echo '<a href="votar.php?f=' . $fila->id . '" class="btn btn-primary mt-auto">Votar</a>';
                         echo '</div>';
                         echo '</div>';
                         echo '</div>';
