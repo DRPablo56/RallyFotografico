@@ -55,6 +55,7 @@ if ($_GET["r"] == "") {
             </div>
         </div>
     </nav>
+    <main class="container min-vh-100">
     <?php
     if (isset($_SESSION["nombre"])):
         $usuarioID = $_SESSION["usuarioID"];
@@ -77,7 +78,7 @@ if ($_GET["r"] == "") {
         <?php
         else:
         ?>
-            <!-- Sección registro -->
+            <!-- Sección Apuntarse -->
             <div class="bg-light py-5 container-fluid d-flex flex-column align-items-center">
                 <h2 class="text-center mb-4">Apúntate para participar</h2>
                 <p class="text-center">Para participar en el rally, debes apuntarte.</p>
@@ -95,30 +96,29 @@ if ($_GET["r"] == "") {
     <div class="bg-light py-5">
         <div class="container">
             <h2 class="text-center mb-4">Vota una fotografía</h2>
-            <div class="row g-4">
-                <div class="col-md-6 d-flex flex-row">
-                    <?php
-                    $consulta = "select * from fotografias where rally_id = $id";
-                    $resultado = resultadoConsulta($conexion, $consulta);
-                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
-                        if ($fila->estado == "Aprobada") {
-                            echo '<div class="card">';
-                            echo '<div class="card-body">';
-                            echo '<h5 class="card-title">' . $fila->titulo . '</h5>';
-                            echo '<p class="card-text">' . $fila->descripcion . '</p>';
-                            echo '<img src="img/' . $fila->url . '" class="card-img-top py-2" alt="Imagen de ' . $fila->titulo . '">';
-                            echo '<a href="#" class="btn btn-primary">Votar</a>';
-                            echo '</div>';
-                            echo '</div>';
-                        }
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <?php
+                $consulta = "select * from fotografias where rally_id = $id";
+                $resultado = resultadoConsulta($conexion, $consulta);
+                while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+                    if ($fila->estado == "Aprobada") {
+                        echo '<div class="col">';
+                        echo '<div class="card h-100">';
+                        echo '<div class="card-body d-flex flex-column">';
+                        echo '<h5 class="card-title">' . $fila->titulo . '</h5>';
+                        echo '<p class="card-text">' . $fila->descripcion . '</p>';
+                        echo '<img src="img/' . $fila->url . '" class="card-img-top py-2" alt="Imagen de ' . $fila->titulo . '">';
+                        echo '<a href="#" class="btn btn-primary mt-auto">Votar</a>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</div>';
                     }
-                    ?>
-
-                </div>
+                }
+                ?>
             </div>
         </div>
     </div>
-
+    </main>
     <!-- Footer -->
     <footer class="bg-dark text-white py-4 mt-1">
         <div class="container">
