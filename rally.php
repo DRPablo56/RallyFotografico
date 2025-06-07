@@ -34,10 +34,17 @@ if ($_GET["r"] == "") {
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php">Rally Fotográfico</a>
             <div class="d-flex">
-                <?php
-                if (isset($_SESSION["nombre"])):
-                ?>
                     <span class="text-light me-2">Bienvenido <?php echo $_SESSION["nombre"] ?></span>
+                    <?php
+                if (isset($_SESSION["nombre"])):
+                    if(isset($_SESSION["rol"]) && $_SESSION["rol"] == "1"):
+                ?>
+                        <a href="admin.php?r=<?php echo $id; ?>">
+                            <button class="btn btn-primary me-2" type="button">Panel de administrador</button>
+                        </a>
+                <?php
+                    endif;
+                ?>
                     <a href="cerrar.php">
                         <button class="btn btn-danger me-2" type="button">Cerrar Sesión</button>
                     </a>
@@ -99,7 +106,8 @@ if ($_GET["r"] == "") {
             <h2 class="text-center mb-4">Vota una fotografía</h2>
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 <?php
-                $consulta = "select * from fotografias where rally_id = $id";
+                $consulta = "SELECT f.id, f.titulo, f.descripcion, f.url, f.estado, f.autor_id, f.rally_id, COUNT(v.foto_id) AS votos FROM fotografias f LEFT JOIN votos v ON f.id = v.foto_id 
+                            WHERE f.rally_id = $id GROUP BY f.id, f.titulo, f.descripcion, f.url, f.estado, f.autor_id, f.rally_id ORDER BY f.id;";
                 $resultado = resultadoConsulta($conexion, $consulta);
                 while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
                     if ($fila->estado == "Aprobada") {
@@ -110,6 +118,7 @@ if ($_GET["r"] == "") {
                         echo '<p class="card-text">' . $fila->descripcion . '</p>';
                         echo '<img src="img/' . $fila->url . '" class="card-img-top py-2" alt="Imagen de ' . $fila->titulo . '">';
                         echo '<a href="votar.php?f=' . $fila->id . '" class="btn btn-primary mt-auto">Votar</a>';
+                        echo '<p class="mt-2">Votos: ' . $fila->votos . '</p>';
                         echo '</div>';
                         echo '</div>';
                         echo '</div>';
