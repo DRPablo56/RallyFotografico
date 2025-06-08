@@ -34,9 +34,9 @@ if ($_GET["r"] == "" || !is_numeric($_GET["r"])) {
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php">Rally Fotográfico</a>
             <div class="d-flex">
-                    <span class="text-light me-2">Bienvenido <?php echo $_SESSION["nombre"] ?></span>
                     <?php
                 if (isset($_SESSION["nombre"])):
+                    echo '<span class="text-light me-2">Bienvenido ' . $_SESSION["nombre"] . '</span>';
                     if(isset($_SESSION["rol"]) && $_SESSION["rol"] == "1"):
                 ?>
                         <a href="admin.php?r=<?php echo $id; ?>">
