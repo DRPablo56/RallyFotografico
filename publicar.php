@@ -18,6 +18,33 @@ if (isset($_SESSION["usuarioID"])) {
     $resultado = resultadoConsulta($conexion, $consulta);
     $fila = $resultado->fetch(PDO::FETCH_OBJ);
     if ($fila->num > 0) {
+        // Comprobar que sea una imagen
+        $tipoImagen = $_FILES["fotografia"]["type"];
+        if (substr($tipoImagen, 0, 6) !== "image/") {
+            header("Location: rally.php?r=$id&error=tipo");
+            exit();
+        }
+
+        // Comprobar tamaño del archivo
+        if ($_FILES["fotografia"]["size"] > 25 * 1024 * 1024) {
+            header("Location: rally.php?r=$id&error=grande");
+            exit();
+        }
+        
+        // Comprobar límite de fotos
+        $consulta = "SELECT lim_fotos FROM rallys WHERE id = $id";
+        $resultado = resultadoConsulta($conexion, $consulta);
+        $rally = $resultado->fetch(PDO::FETCH_OBJ);
+        
+        $consulta = "SELECT COUNT(*) as total FROM fotografias WHERE rally_id = $id AND autor_id = $usuarioID";
+        $resultado = resultadoConsulta($conexion, $consulta);
+        $fotos = $resultado->fetch(PDO::FETCH_OBJ);
+        
+        if ($fotos->total >= $rally->lim_fotos) {
+            header("Location: rally.php?r=$id&error=limite");
+            exit();
+        }
+
         try {
             $tipoImagen = strtolower(pathinfo($_FILES["fotografia"]["name"],PATHINFO_EXTENSION));
             $url = uniqid('', true) . "." . $tipoImagen;

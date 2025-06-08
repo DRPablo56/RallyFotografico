@@ -4,7 +4,7 @@ require_once("utiles/funciones.php");
 require_once("utiles/variables.php");
 $conexion = conexionBD($host, $user, $password, $bbdd);
 // Recibir el rally que se quiere ver, si no existe redirigir a inicio
-if ($_GET["r"] == "") {
+if ($_GET["r"] == "" || !is_numeric($_GET["r"])) {
     header("Location: index.php");
 } else {
     $id = $_REQUEST["r"];
@@ -23,7 +23,7 @@ if ($_GET["r"] == "") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rally Fotográfico</title>
+    <title>Rally - Rally Fotográfico</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -41,6 +41,12 @@ if ($_GET["r"] == "") {
                 ?>
                         <a href="admin.php?r=<?php echo $id; ?>">
                             <button class="btn btn-primary me-2" type="button">Panel de administrador</button>
+                        </a>
+                <?php
+                    else:
+                ?>
+                        <a href="perfil.php">
+                            <button class="btn btn-primary me-2" type="button">Mi Perfil</button>
                         </a>
                 <?php
                     endif;
@@ -63,6 +69,24 @@ if ($_GET["r"] == "") {
             </div>
         </div>
     </nav>
+    
+    <?php if(isset($_GET['error'])): ?>
+        <div class="container mt-3">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?php 
+                if($_GET['error'] == 'grande') {
+                    echo 'El tamaño de la imagen no puede ser superior a 25MB';
+                } elseif($_GET['error'] == 'limite') {
+                    echo 'Has alcanzado el límite de imágenes para este rally';
+                } elseif($_GET['error'] == 'tipo') {
+                    echo 'El archivo debe ser una imagen válida';
+                }
+                ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    <?php endif; ?>
+
     <main class="container min-vh-100">
     <?php
     if (isset($_SESSION["nombre"])):
@@ -79,7 +103,7 @@ if ($_GET["r"] == "") {
                     <input type="hidden" name="rally_id" value="<?php echo $id; ?>">
                     <input type="text" name="titulo" placeholder="Título" class="form-control mb-3" required>
                     <input type="text" name="descripcion" placeholder="Descripción" class="form-control mb-3" required>
-                    <input type="file" name="fotografia" class="form-control mb-3" required>
+                    <input type="file" name="fotografia" class="form-control mb-3" accept="image/*" required>
                     <input type="submit" class="btn btn-primary" value="Publicar">
                 </form>
             </div>
@@ -107,7 +131,7 @@ if ($_GET["r"] == "") {
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 <?php
                 $consulta = "SELECT f.id, f.titulo, f.descripcion, f.url, f.estado, f.autor_id, f.rally_id, COUNT(v.foto_id) AS votos FROM fotografias f LEFT JOIN votos v ON f.id = v.foto_id 
-                            WHERE f.rally_id = $id GROUP BY f.id, f.titulo, f.descripcion, f.url, f.estado, f.autor_id, f.rally_id ORDER BY f.id;";
+                            WHERE f.rally_id = $id GROUP BY f.id, f.titulo, f.descripcion, f.url, f.estado, f.autor_id, f.rally_id ORDER BY votos DESC;";
                 $resultado = resultadoConsulta($conexion, $consulta);
                 while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
                     if ($fila->estado == "Aprobada") {

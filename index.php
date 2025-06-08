@@ -25,6 +25,15 @@ $conexion = conexionBD($host, $user, $password, $bbdd);
                 if (isset($_SESSION["nombre"])):
                 ?>
                     <span class="text-light me-2">Bienvenido <?php echo $_SESSION["nombre"] ?></span>
+                    <?php
+                    if(isset($_SESSION["rol"]) && $_SESSION["rol"] != "1"):
+                    ?>
+                        <a href="perfil.php">
+                            <button class="btn btn-primary me-2" type="button">Mi Perfil</button>
+                        </a>
+                    <?php
+                    endif;
+                    ?>
                     <a href="cerrar.php">
                         <button class="btn btn-danger me-2" type="button">Cerrar Sesión</button>
                     </a>

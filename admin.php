@@ -8,6 +8,10 @@ if ($_GET["r"] == "" || $_SESSION["rol"] != "1") {
     header("Location: index.php");
 } else {
     $id = $_REQUEST["r"];
+    // Obtener datos del rally
+    $consulta = "SELECT titulo, descripcion, estado, lim_fotos FROM rallys WHERE id = $id";
+    $resultado = resultadoConsulta($conexion, $consulta);
+    $rally = $resultado->fetch(PDO::FETCH_OBJ);
 }
 ?>
 <!DOCTYPE html>
@@ -20,6 +24,31 @@ if ($_GET["r"] == "" || $_SESSION["rol"] != "1") {
 </head>
 <body>
     <div class="container mt-5">
+        <h2>Configuración del Rally</h2>
+        <form action="modificar_rally.php" method="POST" class="mb-5">
+            <input type="hidden" name="rally_id" value="<?php echo $id; ?>">
+            <div class="mb-3">
+                <label for="titulo" class="form-label">Título</label>
+                <input type="text" class="form-control" id="titulo" name="titulo" value="<?php echo $rally->titulo; ?>" required>
+            </div>
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripción</label>
+                <textarea class="form-control" id="descripcion" name="descripcion" required><?php echo $rally->descripcion; ?></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="estado" class="form-label">Estado</label>
+                <select class="form-control" id="estado" name="estado">
+                    <option value="Activo" <?php echo $rally->estado == 'Activo' ? 'selected' : ''; ?>>Activo</option>
+                    <option value="Inactivo" <?php echo $rally->estado == 'Inactivo' ? 'selected' : ''; ?>>Inactivo</option>
+                    <option value="Finalizado" <?php echo $rally->estado == 'Finalizado' ? 'selected' : ''; ?>>Finalizado</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="lim_fotos" class="form-label">Límite de fotos</label>
+                <input type="number" class="form-control" id="lim_fotos" name="lim_fotos" value="<?php echo $rally->lim_fotos; ?>" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </form>
         <h2>Participantes del Rally</h2>
         <table class="table">
             <thead>
